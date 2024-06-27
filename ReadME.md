@@ -39,4 +39,3 @@ go run gpu_io_exporter.go
 - GPU Memory Usage
 - I/O Read Bytes
 - I/O Write Bytes
-```
