@@ -9,7 +9,6 @@ This repository Contains proof-of-concept exporters written in Python and Go for
 
 - `nvidia_gpu_exporter.py`: A Python script that collects GPU utilization, memory usage, and I/O metrics.
 - `gpu_io_exporter.go`: A Go script that collects GPU utilization, memory usage, and I/O metrics.
-- `disk_io_exporter.go`: (Planned) A Go script for collecting disk I/O metrics.
 
 ## Requirements
 
