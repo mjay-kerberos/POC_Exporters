@@ -1,0 +1,6 @@
+- name: Install GPU and IO Metrics Collection
+  hosts: gpu_servers
+  become: yes
+  roles:
+    - metrics_exporter
+    

@@ -1,0 +1,10 @@
+[Unit]
+Description=Job Metrics Collection Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/bin/metrics.py --log-to-file
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,36 @@
+---
+- name: Ensure required directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /var/log/job_metrics
+    - /var/lib/node_exporter/textfile_collector
+    - /usr/local/bin
+
+- name: Copy metrics collection script
+  copy:
+    src: files/metrics.py
+    dest: /usr/local/bin/metrics.py
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy systemd service file
+  template:
+    src: templates/job-metrics.service.j2
+    dest: /etc/systemd/system/job-metrics.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start metrics collection service
+  systemd:
+    name: job-metrics.service
+    enabled: yes
+    state: started
