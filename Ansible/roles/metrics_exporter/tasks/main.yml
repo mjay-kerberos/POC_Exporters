@@ -19,7 +19,7 @@
 
 - name: Copy systemd service file
   template:
-    src: templates/job-metrics.service.j2
+    src: templates/job_metrics.service.j2
     dest: /etc/systemd/system/job-metrics.service
     owner: root
     group: root
