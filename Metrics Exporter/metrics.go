@@ -35,6 +35,11 @@ var (
 		Name: "io_write_bytes",
 		Help: "IO write bytes.",
 	}, []string{"pid", "job_id"})
+
+	gpuCountMetric = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "gpu_count_per_job",
+		Help: "Number of GPUs allocated per job",
+	}, []string{"job_id"})
 )
 
 func init() {
@@ -103,7 +108,47 @@ func getJobIDFromPID(pid string) (string, error) {
 	return "", fmt.Errorf("job ID not found for PID %s", pid)
 }
 
+// Function to find GPU count per job
+func findGPUCount(jobIDs map[string]struct{}) map[string]int {
+	gpuCounts := make(map[string]int)
+
+	// Run squeue to fetch JobID and GPU allocation (TRES_PER_N column)
+	cmd := exec.Command("bash", "-c", "squeue --format=\"%.18i %.10b\"")
+	output, err := cmd.Output()
+	if err != nil {
+		fmt.Printf("WARN: Failed to execute squeue command: %s\n", err)
+		return gpuCounts
+	}
+
+	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
+	for _, line := range lines[1:] { // Skip header line
+		parts := strings.Fields(line)
+		if len(parts) < 2 {
+			continue
+		}
+
+		jobID := parts[0]
+		tres := parts[1] // GPU allocation (e.g., gpu:4)
+
+		if strings.HasPrefix(tres, "gpu:") {
+			gpuCount, err := strconv.Atoi(strings.TrimPrefix(tres, "gpu:"))
+			if err != nil {
+				fmt.Printf("WARN: Failed to parse GPU count for Job ID %s: %v\n", jobID, err)
+				continue
+			}
+			if _, exists := jobIDs[jobID]; exists {
+				gpuCounts[jobID] = gpuCount
+			}
+		}
+	}
+
+	return gpuCounts
+}
+
 func collectGPUMetrics(jobIDs map[string]struct{}) {
+	// Get GPU count for each job
+	gpuCounts := findGPUCount(jobIDs)
+
 	gpuInfoCmd := exec.Command("bash", "-c", "nvidia-smi --query-gpu=gpu_uuid,index,name,utilization.gpu --format=csv,noheader")
 	gpuInfoOutput, err := gpuInfoCmd.Output()
 	if err != nil {
@@ -160,6 +205,9 @@ func collectGPUMetrics(jobIDs map[string]struct{}) {
 				}
 			}
 		}
+	}
+	for jobID, gpuCount := range gpuCounts {
+		gpuCountMetric.With(prometheus.Labels{"job_id": jobID}).Set(float64(gpuCount))
 	}
 }
 
