@@ -319,7 +319,7 @@ func collectIOMetrics() map[string]struct{} {
 
 func main() {
 	go func() {
-		ticker := time.NewTicker(2 * time.Second)
+		ticker := time.NewTicker(10 * time.Second)
 		defer ticker.Stop()
 		for range ticker.C {
 			jobIDs := collectIOMetrics()
