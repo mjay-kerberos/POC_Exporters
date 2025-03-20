@@ -1,0 +1,15 @@
+galaxy_info:
+  author: Juliet Meza
+  description: Install and Configure custom GPU/IO metric collection exporter
+  company: Data in Science Technologies
+  role_name: prometheus_metric_exporter
+  namespace: dstdev
+
+  license: MIT
+
+  min_ansible_version: 2.18.3
+
+
+  galaxy_tags: []
+
+dependencies: []
