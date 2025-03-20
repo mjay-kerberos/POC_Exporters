@@ -1,3 +1,4 @@
+
 ---
 - name: Ensure required directories exist
   file:
