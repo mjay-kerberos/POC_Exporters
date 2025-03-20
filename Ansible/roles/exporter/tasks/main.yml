@@ -1,0 +1,34 @@
+
+    - name: Extract job_metrics_exporter
+      unarchive:
+        src: files/job_metrics_exporter-v0.1.10-alpha-linux-amd64.tar.gz
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Move binary to /usr/local/bin
+      command: mv /tmp/job_metrics_exporter /usr/local/bin/
+
+    - name: Create systemd unit file for job_metrics_exporter
+      copy:
+        dest: /etc/systemd/system/job_metrics_exporter.service
+        content: |
+          [Unit]
+          Description=Job Metrics Exporter Service
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/local/bin/job_metrics_exporter
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd to pick up new service
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Start and enable job_metrics_exporter service
+      ansible.builtin.systemd:
+        name: job_metrics_exporter
+        state: started
+        enabled: yes
