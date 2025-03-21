@@ -113,7 +113,7 @@ func findGPUCount(jobIDs map[string]struct{}) map[string]int {
 	gpuCounts := make(map[string]int)
 
 	// Run squeue to fetch JobID and GPU allocation (TRES_PER_N column)
-	cmd := exec.Command("bash", "-c", "squeue --format=\"%.18i %.10b\"")
+	cmd := exec.Command("bash", "-c", "squeue -o \"%.18i %.10b\"")
 	output, err := cmd.Output()
 	if err != nil {
 		fmt.Printf("WARN: Failed to execute squeue command: %s\n", err)
