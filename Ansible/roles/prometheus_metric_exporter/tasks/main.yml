@@ -1,7 +1,13 @@
 ---
+- name: Copy job_metrics_exporter
+  copy:
+    src: files/job_metrics_exporter-v0.1.10-alpha-linux-amd64.tar.gz
+    dest: /tmp/
+    remote_src: yes
+
 - name: Extract job_metrics_exporter
   unarchive:
-    src: files/job_metrics_exporter-v0.1.10-alpha-linux-amd64.tar.gz
+    src: /tmp/job_metrics_exporter-v0.1.10-alpha-linux-amd64.tar.gz
     dest: /tmp/
     remote_src: yes
 
