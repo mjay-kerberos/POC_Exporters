@@ -1,6 +1,6 @@
 ### POC Exporters README (`README.md`)
 
-```markdown
+
 # GPU and I/O Exporters
 
 This repository Contains proof-of-concept exporters written in Python and Go for collecting GPU and I/O metrics. These exporters are designed to work with Prometheus for monitoring system performance.
