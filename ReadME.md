@@ -6,7 +6,7 @@
 
 # POC_EXPORTERS
 
-<em>Empower performance insights for optimized resource management.</em>
+<em>Modular Prometheus exporters for GPU, CPU, and I/O insights — designed for Slurm-managed HPC clusters. Built with Python, Go, and Ansible for seamless observability, job-level tracking, and infrastructure automation.</em>
 
 <!-- BADGES -->
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
